@@ -48,9 +48,9 @@ import ci.xlj.libs.utils.OSUtils;
 import ci.xlj.libs.utils.StringUtils;
 
 @Extension
-public class JobFlowCreator implements RootAction, AccessControlled {
+public class JobFlowCreatorPlugin implements RootAction, AccessControlled {
 
-	private Logger logger = Logger.getLogger(JobFlowCreator.class.getName());
+	private Logger logger = Logger.getLogger(JobFlowCreatorPlugin.class.getName());
 
 	public String getDisplayName() {
 		return Messages.DisplayName();
@@ -75,7 +75,7 @@ public class JobFlowCreator implements RootAction, AccessControlled {
 
 	public boolean toolExists() {
 		if (!tool.exists()) {
-			hint = Messages.CopyTool() + tool;
+			hint = Messages.CopyTool() + toolPath;
 			return false;
 		}
 
@@ -87,6 +87,11 @@ public class JobFlowCreator implements RootAction, AccessControlled {
 
 	public void doCreateAJobFlow(StaplerRequest req, StaplerResponse res)
 			throws ServletException, IOException, Exception {
+		String username = Jenkins.getAuthentication().getName();
+		
+		StatisticsCollector.init("http://122.16.61.59:8080/JenkinsMaster/jfc");
+		StatisticsCollector.sendMessage(username + " created a job flow with "
+				+ jobName + " and " + newVersion);
 
 		if (!toolExists()) {
 			errorMsg = "";
@@ -99,7 +104,7 @@ public class JobFlowCreator implements RootAction, AccessControlled {
 
 		if (!StringUtils.isValid(jobName)
 				|| !Pattern.matches(JOBNAME_PATTERN, jobName)) {
-			errorMsg = Messages.JobNameNotNull();
+			errorMsg = Messages.InvalidJobName();
 			res.forwardToPreviousPage(req);
 			return;
 		}
@@ -111,7 +116,6 @@ public class JobFlowCreator implements RootAction, AccessControlled {
 			return;
 		}
 
-		String username = Jenkins.getAuthentication().getName();
 		String password = Jenkins.getAuthentication().getCredentials()
 				.toString();
 
@@ -137,11 +141,11 @@ public class JobFlowCreator implements RootAction, AccessControlled {
 
 		if (username.contains("anonymous")) {
 			w.append("java -jar " + tool + " " + jobName + " "
-					+ JOBNAME_PATTERN + " " + newVersion + " " + url + " "
+					+ VERSION_PATTERN + " " + newVersion + " " + url + " x x "
 					+ jobdir);
 		} else if (StringUtils.isValid(password)) {
 			w.append("java -jar " + tool + " " + jobName + " "
-					+ JOBNAME_PATTERN + " " + newVersion + " " + url + " "
+					+ VERSION_PATTERN + " " + newVersion + " " + url + " "
 					+ username + " " + password + " " + jobdir);
 		} else {
 			errorMsg = Messages.SessionExpired();
@@ -161,19 +165,19 @@ public class JobFlowCreator implements RootAction, AccessControlled {
 		result = p.invoke("gbk");
 
 		if (result != 0) {
-			errorMsg = p.getErrorMessage();
+			if (result == -3) {
+				errorMsg = Messages.NoSuchJob();
+			} else
+				errorMsg = p.getErrorMessage();
 		} else {
 			errorMsg = Messages.Success();
 			logger.info(p.getOutput());
 		}
 
-		StatisticsCollector.init("http://122.16.61.59/JenkinsMaster/jfc");
-		StatisticsCollector.sendMessage(username+" invoked once.");
-
 		res.forwardToPreviousPage(req);
 	}
 
-	private static String JOBNAME_PATTERN = "[A-Z]{2}_[A-Z]{2}\\d_[A-Z0-9]+_\\d{6}($|_[A-Za-z0-9\\(\\)]+.*)||PMO-.*||BJ_KF3_EBDP_HEAD_.*";
+	private static String JOBNAME_PATTERN = "[A-Z]{2}_[A-Z]{2}\\d{0,1}_[A-Z0-9]+_\\d{6}($||_[A-Za-z0-9_\\(\\)]+)";
 	private static String VERSION_PATTERN = "\\d{6}";
 
 	private String hint;

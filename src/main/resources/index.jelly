@@ -1,4 +1,4 @@
 <div>
-   项目办持续集成小组开发的用于批量创建任务的插件，用户可以通过输入任务流第一个任务的名称
-   以及新季（月）度版本号来快速创建一组任务。插件的技术支持请联系项目办徐立甲。
+   This plugin is used to create a job flow on Jenkins Server. By inputing <br/>
+   the initial job name and new version, a new job flow can be easily created. 
 </div>

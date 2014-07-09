@@ -1,23 +1,15 @@
-<!--
-Licensed to the Apache Software Foundation (ASF) under one or more
-contributor license agreements.  See the NOTICE file distributed with
-this work for additional information regarding copyright ownership.
-The ASF licenses this file to You under the Apache License, Version 2.0
-(the "License"); you may not use this file except in compliance with
-the License.  You may obtain a copy of the License at
+<!-- Licensed to the Apache Software Foundation (ASF) under one or more contributor 
+	license agreements. See the NOTICE file distributed with this work for additional 
+	information regarding copyright ownership. The ASF licenses this file to 
+	You under the Apache License, Version 2.0 (the "License"); you may not use 
+	this file except in compliance with the License. You may obtain a copy of 
+	the License at http://www.apache.org/licenses/LICENSE-2.0 Unless required 
+	by applicable law or agreed to in writing, software distributed under the 
+	License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS 
+	OF ANY KIND, either express or implied. See the License for the specific 
+	language governing permissions and limitations under the License. Contributors: 
+	Xu Lijia -->
 
-     http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
-
-
-     Contributors:      Xu Lijia 
--->   
-  
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define"
 	xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form"
 	xmlns:i="jelly:fmt">
@@ -32,8 +24,8 @@ limitations under the License.
 			</h1>
 
 			<j:choose>
-				<j:when test="${!it.checkTool()}">
-					注：${it.getHint()}
+				<j:when test="${!it.toolExists()}">
+					<font color="red">${%Note}: ${it.getHint()}</font>
 					<br />
 				</j:when>
 			</j:choose>
@@ -46,14 +38,14 @@ limitations under the License.
 							<table style="width: 100%;height: auto;border: 0px;padding-left: 10px;"
 								cellspacing="0" cellpadding="0">
 
-								<f:radioBlock title="按版本号快速新建任务" name="createByVersion"
+								<f:radioBlock title="${%create by version}" name="createByVersion"
 									value="true" checked="true" />
 
 								<tr>
 									<td colspan="4" style="padding: 5px 25px;">
 										<fieldset
 											style="width:100%; height: auto; border: 1px solid #c0c0c0;vertical-align: top;padding: 0 10px;">
-											<legend>创建配置</legend>
+											<legend>${%Configuration}</legend>
 											<table syle="border: 0;" cellspacing="0" cellpadding="0"
 												width="100%">
 
@@ -62,16 +54,16 @@ limitations under the License.
 														<table width="100%">
 
 															<form action="createAJobFlow">
-																<f:entry title="起始任务名称" field="jobName" id="jobName"
+																<f:entry title="${%Initial job name}" field="jobName" id="jobName"
 																	description="${%jobName.description}">
 																	<f:textbox
-																		checkUrl="'descriptorByName/ci.xlj.plugins.jobflowcreator.JobFlowCreator/checkJobName'+qs(this).addThis().toString()" />
+																		checkUrl="'descriptorByName/ci.xlj.plugins.jobflowcreator.JobFlowCreatorPlugin/checkJobName'+qs(this).addThis().toString()" />
 																</f:entry>
 
-																<f:entry title="新版本号" field="newVersion"
+																<f:entry title="${%new version}" field="newVersion"
 																	description="${%version.description}">
 																	<f:textbox
-																		checkUrl="'descriptorByName/ci.xlj.plugins.jobflowcreator.JobFlowCreator/checkNewVersion'+qs(this).addThis().toString()" />
+																		checkUrl="'descriptorByName/ci.xlj.plugins.jobflowcreator.JobFlowCreatorPlugin/checkNewVersion'+qs(this).addThis().toString()" />
 																</f:entry>
 
 																<f:entry>
@@ -79,7 +71,7 @@ limitations under the License.
 																</f:entry>
 															</form>
 
-															<f:entry title="创建结果">
+															<f:entry title="${%result}">
 																<j:choose>
 																	<j:when test="${it.getResult()==0}">
 																		${it.getErrorMsg()}
@@ -108,7 +100,5 @@ limitations under the License.
 
 		</l:main-panel>
 	</l:layout>
-
-
 
 </j:jelly>
