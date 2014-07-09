@@ -61,7 +61,7 @@ limitations under the License.
 													<td colspan="4" style="padding-left: 15px;">
 														<table width="100%">
 
-															<form action="createBatchJobs">
+															<form action="createAJobFlow">
 																<f:entry title="起始任务名称" field="jobName" id="jobName"
 																	description="${%jobName.description}">
 																	<f:textbox
