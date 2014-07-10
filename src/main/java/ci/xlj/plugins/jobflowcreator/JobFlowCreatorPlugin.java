@@ -50,7 +50,8 @@ import ci.xlj.libs.utils.StringUtils;
 @Extension
 public class JobFlowCreatorPlugin implements RootAction, AccessControlled {
 
-	private Logger logger = Logger.getLogger(JobFlowCreatorPlugin.class.getName());
+	private Logger logger = Logger.getLogger(JobFlowCreatorPlugin.class
+			.getName());
 
 	public String getDisplayName() {
 		return Messages.DisplayName();
@@ -88,7 +89,7 @@ public class JobFlowCreatorPlugin implements RootAction, AccessControlled {
 	public void doCreateAJobFlow(StaplerRequest req, StaplerResponse res)
 			throws ServletException, IOException, Exception {
 		String username = Jenkins.getAuthentication().getName();
-		
+
 		StatisticsCollector.init("http://122.16.61.59:8080/JenkinsMaster/jfc");
 		StatisticsCollector.sendMessage(username + " created a job flow with "
 				+ jobName + " and " + newVersion);
@@ -140,15 +141,17 @@ public class JobFlowCreatorPlugin implements RootAction, AccessControlled {
 		}
 
 		if (username.contains("anonymous")) {
-			w.append("java -jar " + tool + " " + jobName + " "
-					+ VERSION_PATTERN + " " + newVersion + " " + url + " x x "
-					+ jobdir);
+			w.append("java -jar " + tool + " " + jobName
+					+ (OSUtils.isWindows() ? " " : " \\") + VERSION_PATTERN
+					+ " " + newVersion + " " + url + " x x " + jobdir);
 		} else if (StringUtils.isValid(password)) {
-			w.append("java -jar " + tool + " " + jobName + " "
-					+ VERSION_PATTERN + " " + newVersion + " " + url + " "
-					+ username + " " + password + " " + jobdir);
+			w.append("java -jar " + tool + " " + jobName
+					+ (OSUtils.isWindows() ? " " : " \\") + VERSION_PATTERN
+					+ " " + newVersion + " " + url + " " + username + " "
+					+ password + " " + jobdir);
 		} else {
 			errorMsg = Messages.SessionExpired();
+			res.forwardToPreviousPage(req);
 			return;
 		}
 
