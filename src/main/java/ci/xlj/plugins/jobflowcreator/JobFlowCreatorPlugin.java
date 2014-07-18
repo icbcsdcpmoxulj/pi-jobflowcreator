@@ -47,6 +47,13 @@ import ci.xlj.libs.utils.DateUtils;
 import ci.xlj.libs.utils.OSUtils;
 import ci.xlj.libs.utils.StringUtils;
 
+/**
+ * This plugin provides the functionality of creating an all-around job flow<br/>
+ * on Jenkins Server based on a given one. And this plugin should be used</br> 
+ * associated with ci-jobflowcreator-gr tool.
+ *
+ * @author kfzx-xulj
+ */
 @Extension
 public class JobFlowCreatorPlugin implements RootAction, AccessControlled {
 
@@ -71,7 +78,7 @@ public class JobFlowCreatorPlugin implements RootAction, AccessControlled {
 	}
 
 	private File toolPath = new File(Jenkins.getInstance().getRootDir()
-			+ File.separator + "/tools/pmo-jobbatchmaker");
+			+ File.separator + "/tools/pi-jobflowcreator");
 	private File tool = new File(toolPath + "/jt.jar");
 
 	public boolean toolExists() {
